@@ -1,0 +1,13 @@
+info:
+  description: ''
+  title: ''
+  version: ''
+openapi: 3.0.0
+paths:
+  /api/:
+    get:
+      operationId: api_list
+      tags:
+      - api
+servers:
+- url: ''

@@ -6,12 +6,21 @@ from django.contrib.auth.models import User
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password', 'id']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['username', 'password', 'id', 'email']
+        extra_kwargs = {'password': {'write_only': True, 'required':True},
+                        'username': {'required': True},
+                        'email': {'required': True}
+                        }
+
+    # def validate(self, data):
+    #     for f in self.fields:
+    #         if f!="id" and not data[f]:
+    #             raise serializers.ValidationError("Field %s is Required", f)
 
     def create(self, validated_data):
         user = User(
-            username=validated_data['username']
+            username=validated_data['username'],
+            email=validated_data['email']
         )
         user.set_password(validated_data['password'])
         user.save()

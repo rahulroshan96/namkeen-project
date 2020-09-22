@@ -25,7 +25,8 @@ SECRET_KEY = '_djh2d*@%z14(mvr99*)9w6v=j5dat_&vse-s49(j=zj-s80jh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost"]
+# ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -87,7 +88,7 @@ DATABASES = {
     }
 }
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',"https://namkeen-project.herokuapp.com"
+    'http://localhost:3000',"https://namkeen-project.herokuapp.com", 
 ]
 
 # Password validation
@@ -128,21 +129,22 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build/static')]
-MEDIA_URL = '/images/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+MEDIA_URL = 'src/assets/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '')
 STATIC_ROOT = os.path.join(BASE_DIR, 'build', 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 REST_FRAMEWORK = {
     # 'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         # "rest_framework.authentication.TokenAuthentication",
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 # VENV_PATH = os.path.dirname(BASE_DIR)

@@ -21,13 +21,12 @@ const items = [
 //   },
   {
     src: require("../../assets/images/banner_image.jpg"),
-    altText: 'Slide 3',
-    caption: 'Slide 3'
   },
   {
-    src: require("../../assets/images/banner_image.jpg"),
-    altText: 'Slide 3',
-    caption: 'Slide 3'
+    src: require("../../assets/images/banner_image_2.jpg"),
+  },
+  {
+    src: require("../../assets/images/banner_image_3.jpg"),
   }
 ];
 

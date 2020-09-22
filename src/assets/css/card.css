@@ -10,7 +10,7 @@ body {
     display: grid;
     grid-template-rows: 1fr;
     font-family: "Raleway", sans-serif;
-    background-color: #01e37f;
+    /* background-color: #01e37f; */
 }
 h3 {
     font-size: 0.7em;
@@ -48,7 +48,7 @@ img {
 .photo-main {
     border-radius: 6px 6px 0 0;
     background-color: #9be010;
-    background: radial-gradient(#ffc3a0, #ffafbd);
+    background: radial-gradient(#eedb00, #f5e402);
 }
 .photo-main .controls {
     display: flex;
@@ -63,7 +63,7 @@ img {
     position: absolute;
     left: -2.5em;
     top: 2em;
-    max-width: 110%;
+    max-width: 140%;
     filter: saturate(150%) contrast(120%) hue-rotate(10deg) drop-shadow(1px 20px 10px rgba(0, 0, 0, 0.3));
 }
 .photo-album {

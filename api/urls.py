@@ -24,12 +24,15 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView
 )
 
+# for authorization and token
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
+
 urlpatterns = [
     url(r'^protected/', protected, name='protected'),
     url(r'^token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     url(r'^token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     url(r'^token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    url(r'^cart-item-all-list$', cart_item_list, name='cart-item-all-list'),
+    url(r'^cart-item-all-list/', cart_item_list, name='cart-item-all-list'),
     url(r'^cart-item-unpaid-list$', cart_item_unpaid_list, name='cart-item-unpaid-list'),
     url(r'^cart-item-paid-list$', cart_item_paid_list, name='cart-item-paid-list'),
     url(r'^cart-create/', cart_create, name='cart-create'),

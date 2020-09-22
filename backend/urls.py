@@ -23,7 +23,9 @@ from api import views
 urlpatterns = [
     url(r'^api/', include('api.urls')),
     url(r'^admin/', admin.site.urls),
-    re_path('.*', TemplateView.as_view(template_name="index.html"))
+    # re_path('.*', TemplateView.as_view(template_name="index.html"))
 ]
 
 urlpatterns+= static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += [url(r'.*', views.root, name='root')]
+urlpatterns+= [url(r'.*', TemplateView.as_view(template_name="index.html"))]

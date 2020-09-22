@@ -30,10 +30,16 @@ export async function refreshToken(refresh) {
 }
 
 // eslint-disable-next-line
-export async function logout(accessToken) {
-  localStorage.removeItem("access_token");
+export async function logout() {
+  try{
+    localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   // TODO: invalidate token on backend
+  }catch(e){
+    console.log("Error while loggint out")
+    console.log(e)
+  }
+  
 }
 
 
@@ -44,7 +50,19 @@ export const isAuthenticated = () => {
 };
 
 export async function testAPI() {
+  
     const response = await axiosAPI.get("/", {
     });
+    return response;
+  }
+
+  export async function getProducts(username, password) {
+    const token = localStorage.getItem("access_token");
+    const response = await axiosAPI.post("products-list/", {
+      token:token
+    });
+    
+    console.log(response)
+    setNewHeaders(response);
     return response;
   }

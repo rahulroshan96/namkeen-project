@@ -16,11 +16,10 @@ const LoginPage = ({ loginUser, history }) => {
     setState({ ...state, [name]: value });
   };
 
-  const login = async (event) => {
+  const login = (event) => {
     event.preventDefault();
     const { username, password } = state;
-
-    await loginUser(username, password);
+     loginUser(username, password);
     history.push("/");
   };
 

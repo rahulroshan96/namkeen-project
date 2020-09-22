@@ -12,9 +12,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import response, decorators, permissions, status
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # @decorators.permission_classes([permissions.AllowAny])
+# @authentication_classes([JWTAuthentication])
 @api_view(['GET'])
+@permission_classes([permissions.AllowAny])
 def apiOverview(request):
     api_urls = {
         'ItemCartAll':'/api/cart-item-all-list',
@@ -71,9 +74,9 @@ def cart_create(request):
     return Response("Success")
 
 
-# @authentication_classes([JWTAuthentication])
-# @permission_classes([IsAuthenticated])
+
 @api_view(['GET'])
+@permission_classes([permissions.AllowAny])
 def products_list(request):
     products = Product.objects.all()
     serializer = ProductSerializer(products, many=True)
@@ -94,24 +97,32 @@ def cart_get(request):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
+        # import pdb;pdb.set_trace()
         token = super().get_token(user)
-
         # Add custom claims
         token['name'] = user.username
         # ...
 
         return token
 
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
 @api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def register(request):
     data = {}
     serializer = CustomerSerializer(data=request.data)
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=False):
         account = serializer.save()
         data['username'] = account.username
         data['response'] = "Account created successfully"
-        serializer_class = MyTokenObtainPairSerializer
-        data['token'] = serializer_class.get_token(account)['jti']
+        data['token'] = get_tokens_for_user(account)
     else:
         data = serializer.errors
     return Response(data)
@@ -156,10 +167,10 @@ def ship_addr_create(request):
         Response({"error":"Cart Not Created"})
 
 
+# this is to check token is correct or not
 class Protected(APIView):
     def get(self, request):
         return Response(data={'type': 'protected'})
-
 
 protected = Protected.as_view()
 

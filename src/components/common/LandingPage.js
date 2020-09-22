@@ -8,12 +8,12 @@ import NewCard from '../utils/NewCard.js'
 import JumboHeader from '../common/JumboHeader'
 import {get_products} from '../../api/api'
 import reducer from '../../reducer/auth';
-
+import {BASEURL} from '../../Constants'
 var axios = require('axios');
 
 var config = {
     method: 'get',
-    url: 'http://localhost:8000/api/products-list/',
+    url: `${BASEURL}/api/products-list/`,
     headers: { 
       'Accept': 'application/json, text/plain, */*',
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36',
@@ -37,7 +37,7 @@ class LandingPage extends Component {
         // setInterval(this.getClients, 5000);
     }
     getProducts(){
-        axios.get("http://localhost:8000/api/products-list/")
+        axios.get(`${BASEURL}/api/products-list/`)
         .then((res)=>{
             console.log(res.data)
             this.setState({"products":res.data})
@@ -59,7 +59,7 @@ class LandingPage extends Component {
                         return <>
                         <Col sm="4" xs="12" style={{"display":"flex", "justify-content":"flex-start"}}>
                         <Flip left>
-                            <NewCard image={"http://localhost:8000"+value.image} 
+                            <NewCard image={`${BASEURL}`+value.image} 
                             name={value.product_name}
                             price={value.product_price}
                             desc={value.product_desc}
@@ -76,7 +76,7 @@ class LandingPage extends Component {
                         return <>
                         <Col sm="4" xs="12" style={{"display":"flex", "justify-content":"flex-start"}}>
                         <Flip left>
-                            <NewCard image={"http://localhost:8000"+value.image} 
+                            <NewCard image={`${BASEURL}`+value.image} 
                             name={value.product_name}
                             price={value.product_price}
                             desc={value.product_desc}
@@ -93,7 +93,7 @@ class LandingPage extends Component {
                         return <>
                         <Col sm="4" xs="12" style={{"display":"flex", "justify-content":"flex-start"}}>
                         <Flip left>
-                            <NewCard image={"http://localhost:8000"+value.image} 
+                            <NewCard image={`${BASEURL}`+value.image} 
                             name={value.product_name}
                             price={value.product_price}
                             desc={value.product_desc}

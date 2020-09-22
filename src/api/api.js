@@ -1,7 +1,8 @@
 import axios from 'axios'
+import {BASEURL} from '../Constants'
 
 export const get_products=()=>{
-    axios.get("http://localhost:8000/api/products-list/")
+    axios.get(`${BASEURL}/api/products-list/`)
     .then((res)=>{
         console.log(res.data)
         return res.data

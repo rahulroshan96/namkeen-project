@@ -25,8 +25,8 @@ SECRET_KEY = '_djh2d*@%z14(mvr99*)9w6v=j5dat_&vse-s49(j=zj-s80jh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost"]
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost", "namkeenbytes.com"]
+# ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -88,7 +88,7 @@ DATABASES = {
     }
 }
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',"https://namkeen-project.herokuapp.com", 
+    'http://localhost:3000',"https://namkeen-project.herokuapp.com","http://namkeenbytes.com", 
 ]
 
 # Password validation

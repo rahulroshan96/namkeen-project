@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes.js'
 import axios from 'axios'
 import {toast } from 'react-toastify';
+import {BASEURL} from '../Constants'
 
 export const authStart = ()=>{
     return {
@@ -41,7 +42,7 @@ const checkAuthTimeout = expirationDate=>{
 export const authLogin = (username, password)=>{
     return dispatch =>{
         dispatch(authStart())
-        axios.post("http://localhost:8000/api/token/", {
+        axios.post(`${BASEURL}/api/token/`, {
             username:username,
             password:password
         }).then(res=>{
@@ -104,7 +105,7 @@ export const checkExistingSession = ()=>{
 export const authSignup = (username, email, password)=>{
     return dispatch =>{
         dispatch(authStart())
-        axios.post("http://localhost:8000/api/register/", {
+        axios.post(`${BASEURL}/api/register/`, {
             username:username,
             email:email,
             password:password

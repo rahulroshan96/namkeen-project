@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Container} from 'reactstrap'
 import { Table } from 'reactstrap';
+import {BASEURL} from './Constants'
 var axios = require('axios');
 
 class Checkout extends Component {
@@ -53,7 +54,7 @@ class Checkout extends Component {
     }
     getCartProducts(){
         const token = this.state.token
-        axios.get("http://localhost:8000/api/cart-get/",{
+        axios.get(`${BASEURL}/api/cart-get/`,{
             headers: {
                 Authorization: `Bearer ${token}`
               }
@@ -66,7 +67,7 @@ class Checkout extends Component {
         })
     }
     getProducts(){
-        axios.get("http://localhost:8000/api/products-list/")
+        axios.get(`${BASEURL}/api/products-list/`)
         .then((res)=>{
             this.setState({"allProducts":res.data})
         }).catch((err)=>{

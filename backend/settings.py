@@ -25,7 +25,7 @@ SECRET_KEY = '_djh2d*@%z14(mvr99*)9w6v=j5dat_&vse-s49(j=zj-s80jh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost", "namkeenbytes.com"]
+ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost", "namkeenbytes.com", "1.0.0.127.in-addr.arpa"]
 # ALLOWED_HOSTS = ["*"]
 
 
@@ -43,11 +43,27 @@ INSTALLED_APPS = [
     'corsheaders',
     # 'rest_framework_swagger',
     'rest_framework',
+    'django_rest_passwordreset',
+    "djoser",
 ]
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SET_USERNAME_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'SET_PASSWORD_RETYPE': True,
+    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddle'
+    'ware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -56,7 +72,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+DEFAULT_FROM_EMAIL = "namkeenbytes@gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'namkeenbytes@gmail.com'
+# EMAIL_HOST_PASSWORD = 'namkeenbytes123'
+EMAIL_HOST_PASSWORD = 'bxaisdncnzelosae'
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [

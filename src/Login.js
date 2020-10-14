@@ -50,7 +50,7 @@ class Login extends Component {
                 <Input type="password" onChange={e=>this.setState({...this.state,[e.target.name]:e.target.value})} name="password" id="examplePassword" placeholder="Password" />
             </FormGroup>
             {
-                this.props.loading?<Button>Loading....</Button>:<><Button>Login</Button><Link to="/signup"><Button>Signup</Button></Link></>
+                this.props.loading?<Button>Loading....</Button>:<><Button>Login</Button><Link to="/signup"><Button>Signup</Button></Link><Link to="/reset_password"><Button>Forget Password</Button></Link></>
             }
         </Form>
             </div>

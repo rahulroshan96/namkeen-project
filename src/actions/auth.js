@@ -144,4 +144,47 @@ export const isLoggedin =()=>{
     }
 }
 
+export const reset_password = (email) => async dispatch => {
+
+    const body = JSON.stringify({ email }); 
+
+    try {
+        const res = await axios.post(`${BASEURL}/api/auth/users/reset_password/`, {
+            email:email
+        });
+        console.log(res)
+        dispatch({
+            type: actionTypes.RESET_PASSWORD_SUCCESS,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: actionTypes.RESET_PASSWORD_FAIL
+        });
+    }
+};
+
+export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
+
+    const body = JSON.stringify({ uid, token, new_password, re_new_password }); 
+
+    try {
+        const res = await axios.post(`${BASEURL}/api/auth/users/reset_password_confirm/`, {
+            uid:uid,
+            token:token,
+            new_password:new_password,
+            re_new_password:re_new_password,
+        });
+        console.log(res)
+        dispatch({
+            type: actionTypes.RESET_PASSWORD_CONFIRM_SUCCESS,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: actionTypes.RESET_PASSWORD_CONFIRM_FAIL
+        });
+    }
+};
+
 

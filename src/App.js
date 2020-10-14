@@ -10,6 +10,8 @@ import PrivateRoute from './PrivateRoute'
 import LandingPage from './components/common/LandingPage'
 import NewNavbar from './components/common/NewNavbar'
 import Checkout from './Checkout'
+import ResetPassword from './components/authentication/ResetPassword';
+import ResetPasswordConfirm from './components/authentication/ResetPasswordConfirm';
 
 
 class App extends Component {
@@ -24,6 +26,8 @@ class App extends Component {
         <Route exact path="/login" component={Login}/>
         <Route exact path="/signup" component={Signup}/>
         <Route exact path="/logout" component={Logout}/>
+        <Route exact path='/reset_password' component={ResetPassword} />
+        <Route exact path='/password/reset/confirm/:uid/:token' component={ResetPasswordConfirm} />
         <PrivateRoute exact path="/checkout" component={Checkout}/>
         {/* <Route exact path="/checkout" component={Checkout}/> */}
       </Switch>

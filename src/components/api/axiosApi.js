@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const baseURL = "http://localhost:8000/api/";
-const accessToken = localStorage.getItem("access_token");
+const accessToken = localStorage.getItem("token");
 
 const axiosAPI = axios.create({
   baseURL: baseURL,
@@ -70,7 +70,7 @@ axiosAPI.interceptors.response.use(
 
 export function setNewHeaders(response) {
   axiosAPI.defaults.headers["Authorization"] = "Bearer " + response.data.access;
-  localStorage.setItem("access_token", response.data.access);
+  localStorage.setItem("token", response.data.access);
   localStorage.setItem("refresh_token", response.data.refresh);
 }
 

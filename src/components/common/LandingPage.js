@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ToastContainer} from 'react-toastify';
 import NBCard from '../utils/NBCard'
 import {Row, Col, Container} from 'reactstrap'
 import Slide from 'react-reveal/Slide';
@@ -10,6 +11,8 @@ import {get_products} from '../../api/api'
 import reducer from '../../reducer/auth';
 import {BASEURL} from '../../Constants'
 var axios = require('axios');
+
+
 
 var config = {
     method: 'get',
@@ -39,19 +42,19 @@ class LandingPage extends Component {
     getProducts(){
         axios.get(`${BASEURL}/api/products-list/`)
         .then((res)=>{
-            console.log(res.data)
             this.setState({"products":res.data})
             localStorage.setItem("products",res.data)
         }).catch((err)=>{
-            this.setState({"errors":err.response})
-            // return err.response
+            console.log(err.response)
         })
     }
     render() {
         const products = this.state.products
         return (
             <>
+            <ToastContainer/>
             <JumboHeader/>
+            
             <Container style={{"width":"80%"}}>
                 <Row style={{"margin-bottom":"20px"}}> 
                 {
@@ -63,6 +66,25 @@ class LandingPage extends Component {
                             name={value.product_name}
                             price={value.product_price}
                             desc={value.product_desc}
+                            id={value.id}
+                            />
+                        </Flip>
+                        </Col>
+                        </>
+                    })
+                }
+                </Row>
+                {/* <Row style={{"margin-bottom":"20px"}}> 
+                {
+                    products.map((value,index)=>{
+                        return <>
+                        <Col sm="4" xs="12" style={{"display":"flex", "justify-content":"flex-start"}}>
+                        <Flip left>
+                            <NewCard image={`${BASEURL}`+value.image} 
+                            name={value.product_name}
+                            price={value.product_price}
+                            desc={value.product_desc}
+                            id={value.id}
                             />
                         </Flip>
                         </Col>
@@ -80,30 +102,14 @@ class LandingPage extends Component {
                             name={value.product_name}
                             price={value.product_price}
                             desc={value.product_desc}
+                            id={value.id}
                             />
                         </Flip>
                         </Col>
                         </>
                     })
                 }
-                </Row>
-                <Row style={{"margin-bottom":"20px"}}> 
-                {
-                    products.map((value,index)=>{
-                        return <>
-                        <Col sm="4" xs="12" style={{"display":"flex", "justify-content":"flex-start"}}>
-                        <Flip left>
-                            <NewCard image={`${BASEURL}`+value.image} 
-                            name={value.product_name}
-                            price={value.product_price}
-                            desc={value.product_desc}
-                            />
-                        </Flip>
-                        </Col>
-                        </>
-                    })
-                }
-                </Row>
+                </Row> */}
              </Container> 
              </>
         );

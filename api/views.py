@@ -56,11 +56,12 @@ def cart_item_paid_list(request):
     return Response(serializer.data)
 
 
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
 @api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def cart_create(request):
-    customer = Customer.objects.get(user=User.objects.get(username=request.user.username))
+    customer = Customer.objects.get(user=User.objects.get(username="aviuser"))
     existing_cart = Cart.objects.filter(customer=customer, status="U")
     if existing_cart:
         # while uppdating, check if Order exist in the db, if yes then update order too
@@ -71,7 +72,9 @@ def cart_create(request):
         serializer.save()
     else:
         return Response(serializer.errors)
-    return Response("Success")
+    return Response({
+        "result":"Success"
+    })
 
 
 
@@ -82,11 +85,13 @@ def products_list(request):
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
 @api_view(['GET'])
+@permission_classes([permissions.AllowAny])
 def cart_get(request):
-    customer = Customer.objects.get(user=User.objects.get(username=request.user.username))
+    # customer = Customer.objects.get(user=User.objects.get(username=request.user.username))
+    customer = Customer.objects.get(user=User.objects.get(username="aviuser"))
     cart = Cart.objects.filter(customer=customer)
     if cart:
         cart_serializer = CartSerializer(cart[0])
@@ -131,7 +136,8 @@ def register(request):
 # @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def ship_addr_get(request):
-    customer = Customer.objects.get(user=User.objects.get(username=request.user.username))
+    # customer = Customer.objects.get(user=User.objects.get(username=request.user.username))
+    customer = Customer.objects.get(user=User.objects.get(username="aviuser"))
     shipping_addr = ShippingAddress.objects.filter(customer=customer)
     if shipping_addr:
         serializer = ShippingAddressSerializer(shipping_addr)
@@ -144,8 +150,10 @@ def ship_addr_get(request):
 
 
 @api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def ship_addr_create(request):
-    customer = Customer.objects.get(user=User.objects.get(username=request.user.username))
+    # customer = Customer.objects.get(user=User.objects.get(username=request.user.username))
+    customer = Customer.objects.get(user=User.objects.get(username="aviuser"))
     cart = Cart.objects.filter(customer=customer, status="U")
     if cart:
         s_addr = ShippingAddress.objects.filter(customer=customer, cart=cart[0])

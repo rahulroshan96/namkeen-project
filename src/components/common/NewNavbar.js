@@ -7,13 +7,11 @@ import {
   Nav,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  NavbarText
 } from 'reactstrap';
 import {Link} from "react-router-dom";
+import { isAuthenticated } from "../api/authenticationApi"
+
+
 const NewNavbar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,21 +24,18 @@ const NewNavbar = (props) => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
-            {/* <NavItem >
-              <NavLink href="/components/">Components</NavLink>
-            </NavItem> */}
-            <NavItem>
-              <NavLink tag={Link} to="/checkout">Checkout</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} to="/login">Login</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} to="/signup">Signup</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} to="/logout">Logout</NavLink>
-            </NavItem>
+            {
+              isAuthenticated()?<><NavItem><NavLink tag={Link} to="/checkout">Checkout</NavLink></NavItem></>:<></>
+            }
+            {
+              isAuthenticated()?<></>:<><NavItem><NavLink tag={Link} to="/login">Login</NavLink></NavItem></>
+            }
+            {
+              isAuthenticated()?<></>:<><NavItem><NavLink tag={Link} to="/signup">Signup</NavLink></NavItem></>
+            }
+            {
+              isAuthenticated()?<><NavItem><NavLink tag={Link} to="/logout">Logout</NavLink></NavItem></>:<></>
+            }
             {/* <NavItem> */}
               {/* <NavLink href="https://github.com/reactstrap/reactstrap"></NavLink> */}
               {/* <NavLink tag={Link} to="/test">Test</NavLink> */}

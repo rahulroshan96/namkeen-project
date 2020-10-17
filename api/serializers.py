@@ -52,7 +52,8 @@ class CartSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         _item_carts = validated_data.pop('cart_items',[])
-        customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
+        # customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
+        customer = Customer.objects.filter(user=User.objects.get(username="aviuser"))[0]
         cart = Cart.objects.create(customer=customer)
         for item in _item_carts:
             i = CartItem.objects.create(product=item['product'], quantity=item['quantity'],
@@ -74,7 +75,8 @@ class CartSerializer(serializers.ModelSerializer):
                 i[0].quantity = item['quantity']
                 i[0].save()
             else:
-                customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
+                # customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
+                customer = Customer.objects.filter(user=User.objects.get(username="aviuser"))[0]
                 new_item = CartItem.objects.create(product=item['product'], quantity=item['quantity'],
                                                        cart_item_customer=customer)
                 instance.cart_items.add(new_item)
@@ -95,14 +97,22 @@ class CartSerializer(serializers.ModelSerializer):
 
 # TODO: handle lowercase and uppercase username and fieldnames
 class ShippingAddressSerializer(serializers.ModelSerializer):
+
+    address = serializers.CharField(required=True)
+    city = serializers.CharField(required=True)
+    state = serializers.CharField(required=True)
+    mobile_no = serializers.CharField(required=True)
+    pincode = serializers.IntegerField(required=True)
+
     class Meta:
         model = ShippingAddress
-        fields = ('address', 'city', 'state','pincode',)
+        fields = ('address', 'city', 'state', 'pincode', "mobile_no", )
 
     def create(self, validated_data):
         ship_addr = None
         # import pdb;pdb.set_trace()
-        username = self.context['request'].user.username
+        # username = self.context['request'].user.username
+        username = "aviuser"
         customer = Customer.objects.filter(user=User.objects.get(username=username))[0]
         cart = Cart.objects.filter(customer=customer, status="U")
         if cart:
@@ -110,12 +120,14 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
                                                        address=validated_data['address'],
                                                        state=validated_data['state'],
                                                        city=validated_data['city'],
+                                                       mobile_no=validated_data['mobile_no'],
                                                        pincode=validated_data['pincode'],
                                                        cart=cart[0])
         else:
             ship_addr = ShippingAddress.objects.create(customer=customer,
                                                        address=validated_data['address'],
                                                        state=validated_data['state'],
+                                                       mobile_no=validated_data['mobile_no'],
                                                        city=validated_data['city'],
                                                        pincode=validated_data['pincode'])
         return ship_addr
@@ -124,8 +136,10 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         instance.address = validated_data.get('address', "")
         instance.state= validated_data.get('state', "")
         instance.city = validated_data.get('city', "")
-        instance.picode = validated_data.get('pincode', "")
+        instance.mobile_no = validated_data.get('mobile_no', "")
+        instance.pincode = validated_data.get('pincode', "")
         instance.save()
+        return instance
 
 
 

@@ -88,6 +88,7 @@ class ShippingAddress(models.Model):
     city        = models.CharField(max_length=1000, null=True, blank=True)
     state       = models.CharField(max_length=1000, null=True, blank=True)
     pincode     = models.IntegerField(null=True, blank=True)
+    mobile_no   = models.CharField(max_length=14, null=True, blank=True)
 
     def __str__(self):
         return "shipping-addr-%s"%self.customer.user.username

@@ -7,7 +7,7 @@ import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import {withRouter} from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-
+const cart_items = [{"quantity":1,"product_id":1},{"quantity":1,"product_id":2}]
 class Login extends Component {
     constructor(props){
         super(props)
@@ -35,11 +35,11 @@ class Login extends Component {
             return <Redirect to="/" />;
           }
         return (
+            
             <Container>
                 <ToastContainer />
                 <div>
                 <h2 align="center">Login</h2>
-                {/* {JSON.stringify(this.props)} */}
         <Form onSubmit={this.onLogin}>
             <FormGroup>
                 <Label for="exampleEmail"><b>Username</b></Label>

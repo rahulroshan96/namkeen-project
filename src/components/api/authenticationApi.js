@@ -45,8 +45,14 @@ export async function logout() {
 
 // verify this token
 export const isAuthenticated = () => {
-  const token = localStorage.getItem("access_token");
-  return !!token;
+  // const token = localStorage.getItem("access_token");
+  // console.log("Found Token already authenticated")
+  // return !!token;
+  if ("token" in localStorage){
+    return true
+  }else{
+    return false
+  }
 };
 
 export async function testAPI() {
@@ -66,3 +72,14 @@ export async function testAPI() {
     setNewHeaders(response);
     return response;
   }
+
+
+  export async function updateCartFromLocalStorageAPI(itemsList){
+    const token = localStorage.getItem("access_token");
+     const response = await axiosAPI.post("cart-create/", {
+       "cart_items":itemsList
+     });
+     console.log(response)
+     return response
+  }
+  

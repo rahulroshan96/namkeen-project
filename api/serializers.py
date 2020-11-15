@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from .models import CartItem, Cart, Product, Customer, ShippingAddress
 from django.contrib.auth.models import User
+from django import forms
 
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        unique_together = ('email',)
         fields = ['username', 'password', 'id', 'email']
         extra_kwargs = {'password': {'write_only': True, 'required':True},
                         'username': {'required': True},
@@ -22,6 +24,9 @@ class CustomerSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email']
         )
+        email = validated_data['email']
+        if email and User.objects.filter(email=email).exclude(username=validated_data['username']).exists():
+            raise serializers.ValidationError('Email addresses must be unique.')
         user.set_password(validated_data['password'])
         user.save()
         customer = Customer(user=user)
@@ -52,13 +57,14 @@ class CartSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         _item_carts = validated_data.pop('cart_items',[])
-        # customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
-        customer = Customer.objects.filter(user=User.objects.get(username="aviuser"))[0]
+        customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
+        # customer = Customer.objects.filter(user=User.objects.get(username="aviuser"))[0]
         cart = Cart.objects.create(customer=customer)
         for item in _item_carts:
-            i = CartItem.objects.create(product=item['product'], quantity=item['quantity'],
-                                            cart_item_customer=customer)
-            cart.cart_items.add(i)
+            if item['quantity']>0:
+                i = CartItem.objects.create(product=item['product'], quantity=item['quantity'],
+                                                cart_item_customer=customer)
+                cart.cart_items.add(i)
         return cart
 
     def if_old_item_present_in_new(self, old_item, new_item_list):
@@ -68,18 +74,26 @@ class CartSerializer(serializers.ModelSerializer):
         return False
 
     def update(self, instance, validated_data):
+        # import pdb;
+        # pdb.set_trace()
         _item_carts = validated_data.pop('cart_items',[])
+        if not len(_item_carts):
+            for item in instance.cart_items.all():
+                old_item = CartItem.objects.filter(product=item.product, status="U")
+                old_item.delete()
+            return instance
         for item in _item_carts:
             i = CartItem.objects.filter(product=item['product'])
             if i:
                 i[0].quantity = item['quantity']
                 i[0].save()
             else:
-                # customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
-                customer = Customer.objects.filter(user=User.objects.get(username="aviuser"))[0]
+                customer = Customer.objects.filter(user=User.objects.get(username=self.context['request'].user.username))[0]
+                # customer = Customer.objects.filter(user=User.objects.get(username="aviuser"))[0]
                 new_item = CartItem.objects.create(product=item['product'], quantity=item['quantity'],
                                                        cart_item_customer=customer)
                 instance.cart_items.add(new_item)
+
         # check for any deleted item
 
         stale_items_list = []

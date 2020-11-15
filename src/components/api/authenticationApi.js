@@ -1,6 +1,7 @@
 // frontend/src/components/api/authenticationApi.js
 import axiosAPI, { setNewHeaders } from "./axiosApi";
-
+import {BASEURL} from '../../Constants'
+var axios = require('axios');
 export async function signUp(email, username, password) {
   const response = await axiosAPI.post("register/", {
     username,
@@ -48,8 +49,13 @@ export const isAuthenticated = () => {
   // const token = localStorage.getItem("access_token");
   // console.log("Found Token already authenticated")
   // return !!token;
+  getCartProducts()
   if ("token" in localStorage){
-    return true
+    getCartProducts()
+    if ("token" in localStorage){
+      return true
+    }
+    return false
   }else{
     return false
   }
@@ -72,14 +78,25 @@ export async function testAPI() {
     setNewHeaders(response);
     return response;
   }
+  export async function getCartProducts(){
+    const token = localStorage.getItem("token");
+    await axios.get(`${BASEURL}/api/cart-get/`,{
+        headers: {
+            Authorization: `Bearer ${token}`
+          }
+    })
+    .catch((err)=>{
+        localStorage.removeItem("token");
+    })
+}
 
 
-  export async function updateCartFromLocalStorageAPI(itemsList){
-    const token = localStorage.getItem("access_token");
-     const response = await axiosAPI.post("cart-create/", {
-       "cart_items":itemsList
-     });
-     console.log(response)
-     return response
-  }
+  // export async function updateCartFromLocalStorageAPI(itemsList){
+  //   const token = localStorage.getItem("access_token");
+  //    const response = await axiosAPI.post("cart-create/", {
+  //      "cart_items":itemsList
+  //    });
+  //    console.log(response)
+  //    return response
+  // }
   

@@ -112,7 +112,14 @@ export const authSignup = (username, email, password)=>{
         }).then(res=>{
             if (res.data.token===undefined){
                 dispatch(authFail())
-                toast("Account Creation Failed");
+                try{
+                    for(var key in res.data){
+                        toast(res.data[key][0])
+                    }
+                }
+                catch(e){
+                    console.log(e)
+                }
             }else{
                 console.log(res.data.token.access)
                 const token=res.data.token.access
@@ -125,9 +132,20 @@ export const authSignup = (username, email, password)=>{
             }
         }).catch(error=>{
             dispatch(authFail())
-            console.log(error.response)
+            console.log(error.response.data)
             if (error.response && error.response.data){
-                toast(error.response.data.detail)
+                if(toast(error.response.data.detail)){
+                    toast(error.response.data.detail)
+                }
+                if(toast(error.response.data)){
+                    try{
+                        for(var key in error.response.data){
+                            toast(error.response.data[key])
+                        }
+                    }catch(e){
+                        console.log(e)
+                    }
+                }
             }else{
                 console.log(error)
             }

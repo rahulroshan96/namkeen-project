@@ -3,7 +3,8 @@ import {Button, Container} from 'reactstrap'
 import { Table } from 'reactstrap';
 import {Link} from "react-router-dom";
 import {BASEURL} from './Constants'
-import {updateCartFromLocalStorageAPI} from "./components/api/authenticationApi"
+import { Redirect} from "react-router-dom";
+import { toast, ToastContainer} from 'react-toastify';
 var axios = require('axios');
 
 
@@ -22,6 +23,8 @@ class Checkout extends Component {
     this.getProductName = this.getProductName.bind(this)
     this.updateCartFromLocalStorage = this.updateCartFromLocalStorage.bind(this)
     this.updateState = this.updateState.bind(this)
+    this.emptyCart = this.emptyCart.bind(this)
+    this.checkForEvenItemsCount = this.checkForEvenItemsCount.bind(this)
     }
     async updateState(totalPrice, totalQuantity){
         await this.setState({
@@ -54,19 +57,38 @@ class Checkout extends Component {
                     <th scope="row">{index+1}</th>
                             <td><img src={`${BASEURL}`+p.image} style={{"width":"120px"}} />{ p.product_name}</td>
                             <td>{value.quantity}</td>
-                            <td>{p.product_price}</td>
+                            <td>Rs. {p.product_price}/-</td>
                         </tr>
                     </>
                 }
             })
-        console.log("this is x")
-        console.log(totalPrice, totalQuantity)
         if(this.state.totalPrice!==totalPrice && this.state.totalQuantity!==totalQuantity){
             this.updateState(totalPrice,totalQuantity)
         }
         return x
         }
         
+    }
+    async emptyCart(){
+        const token = this.state.token
+        await axios.post(`${BASEURL}/api/cart-create/`,
+        {    
+            "cart_items":[]
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            
+        })
+        .then((res)=>{
+            console.log(res.data)
+            localStorage.removeItem("checkout_items")
+            this.getCartProducts()
+        }).catch((err)=>{
+            console.log(err.response)
+            this.getCartProducts()
+        })
     }
     async updateCartFromLocalStorage(){
         let items_from_localstorage = []
@@ -80,22 +102,22 @@ class Checkout extends Component {
                 items_from_localstorage.push(temp)
             }
         }
-        if(items_from_localstorage.length===0){
-            return
-        }
         const token = this.state.token
+        console.log(items_from_localstorage)
         await axios.post(`${BASEURL}/api/cart-create/`,
-            {    
-                "cart_items":items_from_localstorage
-            },
-            {
+        {    
+            "cart_items":items_from_localstorage
+        },
+        {
+            headers: {
                 Authorization: `Bearer ${token}`
-            },  
-        )
+            },
+            
+        })
         .then((res)=>{
             console.log(res.data)
         }).catch((err)=>{
-            console.log(err)
+            console.log(err.response)
         })
     }
     async componentWillMount(){
@@ -106,29 +128,21 @@ class Checkout extends Component {
         await this.getProducts()
         await this.updateCartFromLocalStorage()
         await this.getCartProducts()
-
     }
-    // getTotalPriceAndQuantity(){
-    //     let totalPrice=0
-    //     let totalQuantity=0
-    //     if (this.state.cartProducts && this.state.cartProducts.cart_items){
-    //         for(var i=0;i<this.state.cartProducts.cart_items.length;i++){
-
-    //         }
-    //     }
-    // }
-    getCartProducts(){
+    async getCartProducts(){
         const token = this.state.token
-        axios.get(`${BASEURL}/api/cart-get/`,{
-            headers: {
-                Authorization: `Bearer ${token}`
-              }
-        })
+        await axios.get(`${BASEURL}/api/cart-get/`,{
+        headers: {
+            Authorization: `Bearer ${token}`
+          }
+    })
         .then((res)=>{
+            console.log("This is get cart products")
+            console.log(res.data)
             this.setState({"cartProducts":res.data})
         }).catch((err)=>{
-            this.setState({"errors":err.response})
-            // return err.response
+            console.log(err.response.data)
+            this.setState({"errors":err.response.data})
         })
     }
     getProducts(){
@@ -139,6 +153,11 @@ class Checkout extends Component {
             console.log(err.response)
         })
     }
+    checkForEvenItemsCount(){
+        toast("Total number of items should be even",{
+            autoClose: 3000,
+        });
+    }
     render() {
         const cartP = this.state.cartProducts
         if(!cartP){
@@ -146,8 +165,8 @@ class Checkout extends Component {
         }
         return (
             <Container>
+                <ToastContainer/>
                 <div>
-                    {JSON.stringify(this.state)}
                     <Table striped>
       <thead>
         <tr>
@@ -161,14 +180,19 @@ class Checkout extends Component {
           {this.state.cartProducts?this.getTableItems():""}
           <tr>
               <td></td>
-              <td></td>
-              <td>{this.state.totalQuantity}</td>
-                <td>{this.state.totalPrice}</td>
+              <td><b>Total</b></td>
+              <td><b>{this.state.totalQuantity}</b></td>
+                <td><b>Rs. {this.state.totalPrice}/-</b></td>
           </tr>
       </tbody>
     </Table>
-    <Button tag={Link} to="/address" className="float-right" color="success">Checkout</Button>
+    {
+        (this.state.totalQuantity%2===1)?
+        <Button className="float-right" color="success" onClick={this.checkForEvenItemsCount}>Checkout</Button>:
+        <Button tag={Link} to="/address" className="float-right" color="success">Checkout</Button>
+    }
     <Button tag={Link} to="/" className="float-right" color="danger">Back</Button>
+    <Button className="float-right" color="warning" onClick={this.emptyCart}>Empty Cart</Button>
                 </div>
             </Container>
         );

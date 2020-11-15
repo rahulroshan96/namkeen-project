@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .managers import CartItemManager
 # Create your models here.
 
 
@@ -10,6 +9,7 @@ PAYMENT_STATUS = (
     )
 
 PAYMENT_CHOICES = (
+        ('I', 'Initialize'),
         ('S', 'Success'),
         ('F', 'Failed'),
     )
@@ -17,6 +17,12 @@ PAYMENT_CHOICES = (
 class Customer(models.Model):
 
     user    = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    email   = models.EmailField(
+                                unique=True,
+                                error_messages={
+                                    'unique': ("An email with that email already exists."),
+                                },
+                                )
     address = models.TextField(max_length=1000, null=True, blank=True)
     city    = models.CharField(max_length=20, null=True , blank=True)
     state   = models.CharField(max_length=20, null=True, blank=True)
@@ -71,15 +77,29 @@ class CartItem(models.Model):
     status = models.CharField(max_length=1, choices=PAYMENT_STATUS, blank=True, null=True, default='U')
 
     def __str__(self):
-        return "item-%s-%s" % (self.product.product_name, str(self.id))
+        return "item-%s-%s-%s" % (self.product.product_name, str(self.id), str(self.status))
+
+class CartManager(models.Manager):
+    def get_total_quantity(self, cc):
+        total = 0
+        for i in cc.cart_items.all():
+            total = total + i.quantity
+        return total
+
+    def get_total_amount(self, cc):
+        total = 0
+        for i in cc.cart_items.all():
+            total = total + (int(i.product.product_price) * int(i.quantity))
+        return total
 
 class Cart(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=1, choices=PAYMENT_STATUS, default="U")
     cart_items = models.ManyToManyField(CartItem, blank=True, null=True)
-
+    objects = CartManager()
     def __str__(self):
-        return "cart-%s" % self.customer.user.username
+        return "cart-%s-%s" % (self.customer.user.username, self.status)
+
 
 class ShippingAddress(models.Model):
     customer    = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
@@ -96,10 +116,14 @@ class ShippingAddress(models.Model):
 class Order(models.Model):
     customer    = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=False, default="")
     transaction_id      = models.CharField(max_length=1000, blank=True, null=False, default="")
-    payment_status      = models.CharField(max_length=1, choices=PAYMENT_CHOICES, blank=True, null=True)
+    payment_id      = models.CharField(max_length=1000, blank=True, null=False, default="")
+    payment_order_id      = models.CharField(max_length=1000, blank=True, null=False, default="")
+    payment_signature      = models.CharField(max_length=1000, blank=True, null=False, default="")
+    payment_status      = models.CharField(max_length=1, choices=PAYMENT_CHOICES, blank=True, null=True, default='I')
     order_amount        = models.FloatField(blank=True, null=True)
     shipping_address    =  models.ForeignKey(ShippingAddress, on_delete=models.CASCADE, blank=True, null=True)
     order_date          = models.DateField(blank=True, null=True)
+    order_time          = models.TimeField(blank=True, null=True)
     # update the products from products list
     cart_items          = models.ManyToManyField(CartItem, blank=True, null=True)
     quantity            = models.IntegerField(blank=True, null=True)

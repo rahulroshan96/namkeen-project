@@ -19,12 +19,12 @@ const items = [
 //     altText: 'Slide 2',
 //     caption: 'Slide 2'
 //   },
-  {
-    src: require("../../assets/images/banner_image.jpg"),
-  },
-  {
-    src: require("../../assets/images/banner_image_2.jpg"),
-  },
+  // {
+  //   src: require("../../assets/images/banner_image.jpg"),
+  // },
+  // {
+  //   src: require("../../assets/images/banner_image_2.jpg"),
+  // },
   {
     src: require("../../assets/images/banner_image_3.jpg"),
   }

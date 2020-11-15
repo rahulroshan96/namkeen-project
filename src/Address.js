@@ -88,14 +88,21 @@ const Address = () => {
                 "state":values.State
             },
             {
+              headers:{
                 Authorization: `Bearer ${token}`
-            },  
+              }  
+            }
         )
         .then((res)=>{
             console.log(res.data)
-            toast("Shipping Address Updated")
+            toast("Shipping Address Updated",{
+              autoClose: 2000,
+          })
         }).catch((err)=>{
             console.log(err)
+            toast("Something went wrong, Try Again!",{
+              autoClose: 2000,
+          })
         })
     },
   });

@@ -42,20 +42,42 @@ class NewCard extends Component {
         }
     }
     add_to_cart = ()=>{
+        var before = 0
+        var after = 0
         let all_items = {}
         if(localStorage.checkout_items){
             all_items = JSON.parse(localStorage.getItem("checkout_items"))
             if(this.props.id in all_items){
-                all_items[this.props.id] = parseInt(this.state.count)
+                before = all_items[this.props.id]
+                if(this.state.count<1){
+                    delete all_items[this.props.id]
+                }else{
+                    all_items[this.props.id] = parseInt(this.state.count)
+                }
             }else{
-                all_items[this.props.id] = this.state.count
+                if(!this.state.count<1){
+                    all_items[this.props.id] = this.state.count
+                }
             }
         }else{
-            all_items[this.props.id] = this.state.count
+            if(!this.state.count<1){
+                all_items[this.props.id] = this.state.count
+            }
         }
+        after = all_items[this.props.id]
         localStorage.removeItem("checkout_items")
         localStorage.setItem("checkout_items", JSON.stringify(all_items))
-        toast(this.state.count+" Items added to Cart");
+        if(this.state.count>0){
+            toast(this.state.count+" Items updated to Cart",{
+                autoClose: 1300,
+            });
+        }else{
+            if(before>0 && after===0){
+                toast("Items removed from the to Cart",{
+                    autoClose: 1300,
+                });
+            }
+        }
     }
         increment = () =>{
             // this.getAllItemsFromLocal()
@@ -89,7 +111,8 @@ class NewCard extends Component {
 	<div class="product__info">
 		<div class="title">
 			<h1>{this.props.name}</h1>
-        <span>{this.props.desc}</span>
+        <span>{this.props.desc}</span><br/>
+        <h6>{this.props.weight} gm</h6>
 		</div>
 		<div class="price">
         Rs <span>{this.props.price}/-</span>

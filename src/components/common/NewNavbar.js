@@ -10,6 +10,8 @@ import {
 } from 'reactstrap';
 import {Link} from "react-router-dom";
 import { isAuthenticated } from "../api/authenticationApi"
+import {AboutUs} from '../common/AboutUs'
+import {ContactUs} from '../common/ContactUs'
 
 
 const NewNavbar = (props) => {
@@ -20,7 +22,7 @@ const NewNavbar = (props) => {
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">Namkeen Bytes</NavbarBrand>
+        <NavbarBrand href="/">NamkeenBytes</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
@@ -36,6 +38,8 @@ const NewNavbar = (props) => {
             {
               isAuthenticated()?<><NavItem><NavLink tag={Link} to="/logout">Logout</NavLink></NavItem></>:<></>
             }
+            <><NavItem><NavLink tag={Link} to="/aboutus">About Us</NavLink></NavItem></>
+            <><NavItem><NavLink tag={Link} to="/contactus">Contact Us</NavLink></NavItem></>
             {/* <NavItem> */}
               {/* <NavLink href="https://github.com/reactstrap/reactstrap"></NavLink> */}
               {/* <NavLink tag={Link} to="/test">Test</NavLink> */}

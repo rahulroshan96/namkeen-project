@@ -17,7 +17,8 @@ from django.conf.urls import url
 from django.contrib import admin
 from .views import apiOverview, cart_item_list, \
     cart_item_paid_list, cart_item_unpaid_list, cart_create, \
-    products_list, cart_get, register, ship_addr_get, ship_addr_create, protected
+    products_list, cart_get, register, ship_addr_get, ship_addr_create, \
+    protected, order, capture, email, test_api
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -43,9 +44,19 @@ urlpatterns = [
     url(r'^register/', register, name='register'),
     url(r'^shipping-address-get/', ship_addr_get, name='shipping-address'),
     url(r'^shipping-address-create/', ship_addr_create, name='ship-addr-create'),
+    # working payment gateway
+    url(r'^order/', order, name='order'),
+    url(r'^capture/', capture, name='capture'),
     # email forget endpoints
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
+    #email test
+    url(r'^email/', email, name='email'),
+    #test
+    url(r'^test/', test_api, name='test'),
     url(r'^', apiOverview, name='api-overview'),
+
+
+
 ]
 # curl -X POST http://127.0.0.1:8088/api/auth/users/reset_password_confirm/ --data 'token=abqwq3-e9a24ac032cc13df2fae536b64ec0e97&uid=MQ&new_password=rahul123&re_new_password'

@@ -25,7 +25,7 @@ SECRET_KEY = '_djh2d*@%z14(mvr99*)9w6v=j5dat_&vse-s49(j=zj-s80jh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost", "namkeenbytes.com", "1.0.0.127.in-addr.arpa"]
+ALLOWED_HOSTS = ["namkeen-project.herokuapp.com", "localhost", "127.0.0.1", "namkeenbytes.com", "1.0.0.127.in-addr.arpa"]
 # ALLOWED_HOSTS = ["*"]
 
 
@@ -156,6 +156,7 @@ MEDIA_URL = 'src/assets/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '')
 STATIC_ROOT = os.path.join(BASE_DIR, 'build', 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 REST_FRAMEWORK = {
     # 'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -170,33 +171,35 @@ REST_FRAMEWORK = {
     ),
 }
 
-# VENV_PATH = os.path.dirname(BASE_DIR)
-# STATIC_ROOT = os.path.join(VENV_PATH, 'static_root')
-# JWT_AUTH = {
-#     'JWT_ENCODE_HANDLER':
-#         'rest_framework_jwt.utils.jwt_encode_handler',
-#     'JWT_DECODE_HANDLER':
-#         'rest_framework_jwt.utils.jwt_decode_handler',
-#     'JWT_PAYLOAD_HANDLER':
-#         'rest_framework_jwt.utils.jwt_payload_handler',
-#     'JWT_PAYLOAD_GET_USER_ID_HANDLER':
-#         'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
-#     'JWT_RESPONSE_PAYLOAD_HANDLER':
-#         'rest_framework_jwt.utils.jwt_response_payload_handler',
-#
-#     'JWT_SECRET_KEY': 'SECRET_KEY',
-#     'JWT_GET_USER_SECRET_KEY': None,
-#     'JWT_PUBLIC_KEY': None,
-#     'JWT_PRIVATE_KEY': None,
-#     'JWT_ALGORITHM': 'HS256',
-#     'JWT_VERIFY': True,
-#     'JWT_VERIFY_EXPIRATION': True,
-#     'JWT_LEEWAY': 0,
-#     'JWT_EXPIRATION_DELTA': timedelta(days=30),
-#     'JWT_AUDIENCE': None,
-#     'JWT_ISSUER': None,
-#     'JWT_ALLOW_REFRESH': False,
-#     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=30),
-#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-#     'JWT_AUTH_COOKIE': None,
-# }
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    # 'SIGNING_KEY': settings.SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=10),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
+}
+
+PAYTM_MERCHANT_ID = 'waTIVo48852935121697'
+PAYTM_SECRET_KEY = 'oR@1tCK1PmVs89EA'
+PAYTM_WEBSITE = 'WEBSTAGING'
+PAYTM_CHANNEL_ID = 'WEB'
+PAYTM_INDUSTRY_TYPE_ID = 'Retail'

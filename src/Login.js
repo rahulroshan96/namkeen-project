@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import {Container} from 'reactstrap'
 import * as actions from './actions/auth'
-import { Redirect, Route, Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import {connect} from 'react-redux'
 import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import {withRouter} from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
-const cart_items = [{"quantity":1,"product_id":1},{"quantity":1,"product_id":2}]
+import { toast, ToastContainer} from 'react-toastify';
 class Login extends Component {
     constructor(props){
         super(props)
@@ -19,6 +18,14 @@ class Login extends Component {
     }
     onLogin(e){
         e.preventDefault()
+        if(this.state.username===""){
+            toast("Username can not be Empty")
+            return
+        }
+        if(this.state.password===""){
+            toast("Password can not be Empty")
+            return
+        }
         this.props.oAuth(this.state.username, this.state.password)
     }
     componentDidMount(){
@@ -35,7 +42,6 @@ class Login extends Component {
             return <Redirect to="/" />;
           }
         return (
-            
             <Container>
                 <ToastContainer />
                 <div>
